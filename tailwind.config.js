@@ -28,14 +28,14 @@ module.exports = {
 
             }
         },
-        fontFamily: {
-            fira_light: "Fira Code Light",
-            fira_regular: "Fira Code Regular",
-            fira_retina: "Fira Code Retina",
-            fira_medium: "Fira Code Medium",
-            fira_semibold: "Fira Code SemiBold",
-            fira_bold: "Fira Code Bold",
-            fira_variable: "Fira Code Variable",
-          }
+                        fontFamily: {
+                                roboto_mono_thin: ["Roboto Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
+                                roboto_mono_extralight: ["Roboto Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
+                                roboto_mono_light: ["Roboto Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
+                                roboto_mono_regular: ["Roboto Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
+                                roboto_mono_medium: ["Roboto Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
+                                roboto_mono_semibold: ["Roboto Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
+                                roboto_mono_bold: ["Roboto Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
+                            }
     }
 }

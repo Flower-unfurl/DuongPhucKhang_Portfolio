@@ -1,5 +1,5 @@
 <template>
-  <div class="code-container flex font-fira_retina text-menu-text">
+  <div class="code-container flex font-roboto_mono_regular text-menu-text">
     <div class="line-numbers lg:flex flex-col w-32 hidden">
 
       <!-- line numbers and asteriscs -->

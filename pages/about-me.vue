@@ -20,12 +20,12 @@
         <!-- title -->
         <div id="section-content-title" class="hidden lg:flex items-center min-w-full">
           <img id="section-arrow-menu" src="/icons/arrow.svg" alt="" class="section-arrow mx-3 open">
-          <p v-html="config.about.sections[currentSection]?.title" class="font-fira_regular text-white text-sm"></p>
+          <p v-html="config.about.sections[currentSection]?.title" class="font-roboto_mono_regular text-white text-sm"></p>
         </div>
 
         <!-- folders -->
         <div>
-          <div v-for="(folder, key, index) in config.about.sections[currentSection]?.info" :key="key" class="grid grid-cols-2 items-center my-2 font-fira_regular text-menu-text" @click="focusCurrentFolder(folder)">
+          <div v-for="(folder, key, index) in config.about.sections[currentSection]?.info" :key="key" class="grid grid-cols-2 items-center my-2 font-roboto_mono_regular text-menu-text" @click="focusCurrentFolder(folder)">
             <div class="flex col-span-2 hover:text-white hover:cursor-pointer">
               <img id="diple" src="/icons/diple.svg" alt="" :class="{ open: isOpen(folder.title)}">
               <img :src="'/icons/folder' + (index+1) + '.svg'" alt="" class="mr-3">
@@ -43,19 +43,19 @@
         <!-- contact -->
         <div id="section-content-title-contact" class="flex items-center min-w-full border-top">
           <img id="section-arrow-menu" src="/icons/arrow.svg" alt="" class="section-arrow mx-3 open">
-          <p v-html="config.contacts.direct.title" class="font-fira_regular text-white text-sm"></p>
+          <p v-html="config.contacts.direct.title" class="font-roboto_mono_regular text-white text-sm"></p>
         </div>
         <div id="contact-sources" class="hidden lg:flex lg:flex-col my-2 pr-2">
           <div v-for="(source, key) in config.contacts.direct.sources" :key="key" class="flex items-center mb-2">
             <img :src="'/icons/' + key + '.svg'" alt="" class="mx-4">
-            <a v-html="source" href="/" class="font-fira_retina text-menu-text hover:text-white break-all"></a>
+            <a v-html="source" href="/" class="font-roboto_mono_regular text-menu-text hover:text-white break-all"></a>
           </div>
         </div>
 
       </div>
 
       <!-- mobile -->
-      <div id="section-content" class="lg:hidden w-full font-fira_regular">
+  <div id="section-content" class="lg:hidden w-full font-roboto_mono_regular">
 
         <div v-for="section in config.about.sections" :key="section.title">
           
@@ -67,7 +67,7 @@
 
           <!-- folders -->
           <div :id="'folders-' + section.title" class="hidden"> <!-- <div :id="'folders-' + section.title" :class="currentSection == section.title ? 'block' : 'hidden'"> -->
-            <div v-for="(folder, key, index) in config.about.sections[section.title]?.info" :key="key" class="grid grid-cols-2 items-center my-2 font-fira_regular text-menu-text hover:text-white hover:cursor-pointer" @click="focusCurrentFolder(folder)">
+            <div v-for="(folder, key, index) in config.about.sections[section.title]?.info" :key="key" class="grid grid-cols-2 items-center my-2 font-roboto_mono_regular text-menu-text hover:text-white hover:cursor-pointer" @click="focusCurrentFolder(folder)">
               <div class="flex col-span-2">
                 <img id="diple" src="/icons/diple.svg">
                 <img :src="'icons/folder' + (index+1) + '.svg'" alt="" class="mr-3">
@@ -88,14 +88,14 @@
         <!-- section content title -->
         <div id="section-content-title" class="flex items-center min-w-full" @click="showContacts()">
           <img src="/icons/arrow.svg" alt="" id="section-arrow" class="section-arrow">
-          <p v-html="config.contacts.direct.title" class="font-fira_regular text-white text-sm"></p>
+          <p v-html="config.contacts.direct.title" class="font-roboto_mono_regular text-white text-sm"></p>
         </div>
 
         <!-- section content folders -->
         <div id="contacts" class="hidden">
           <div v-for="(source, key) in config.contacts.direct.sources" :key="key" class="flex items-center my-2">
             <img :src="'/icons/' + key + '.svg'" alt="">
-            <a v-html="source" href="/" class="font-fira_retina text-menu-text hover:text-white ml-4"></a>
+            <a v-html="source" href="/" class="font-roboto_mono_regular text-menu-text hover:text-white ml-4"></a>
           </div>
         </div>
 
@@ -117,13 +117,13 @@
         <!-- windows tab desktop -->
         <div class="tab-height w-full hidden lg:flex border-bot items-center">
           <div class="flex items-center border-right h-full">
-            <p v-html="config.about.sections[currentSection]?.title" class="font-fira_regular text-menu-text text-sm px-3"></p>
+            <p v-html="config.about.sections[currentSection]?.title" class="font-roboto_mono_regular text-menu-text text-sm px-3"></p>
             <img src="/icons/close.svg" alt="" class="mx-3">
           </div>
         </div>
 
         <!-- windows tab mobile -->
-        <div id="tab-mobile" class="flex lg:hidden font-fira_retina">
+  <div id="tab-mobile" class="flex lg:hidden font-roboto_mono_regular">
             <span class="text-white">// </span>
             <h3 v-html="config.about.sections[currentSection]?.title" class="text-white px-2"></h3>
             <span class="text-menu-text"> / </span>

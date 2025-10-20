@@ -2,9 +2,9 @@
     <div id="project" :key="key" class="lg:mx-5">
 
         <span class="flex text-sm my-3">
-            <h3 v-if="index == null" class="text-purplefy font-fira_bold mr-3">Project {{ key + 1 }}</h3>
-            <h3 v-else class="text-purplefy font-fira_bold mr-3">Project {{ index + 1 }}</h3>
-            <h4 class="font-fira_retina text-menu-text"> // {{ project.title }}</h4>
+            <h3 v-if="index == null" class="text-purplefy font-roboto_mono_bold mr-3">Project {{ key + 1 }}</h3>
+            <h3 v-else class="text-purplefy font-roboto_mono_bold mr-3">Project {{ index + 1 }}</h3>
+            <h4 class="font-roboto_mono_regular text-menu-text"> // {{ project.title }}</h4>
         </span>
 
         <div id="project-card" class="flex flex-col">
@@ -16,10 +16,10 @@
             </div>
 
             <div class="pb-8 pt-6 px-6 border-top">
-                <p class="text-menu-text font-fira_retina text-sm mb-5">
+                <p class="text-menu-text font-roboto_mono_regular text-sm mb-5">
                 {{ project.description }}
                 </p>
-                <a id="view-button" :href="project.url" target="_blank" class="text-white font-fira_retina py-2 px-4 w-fit text-xs rounded-lg">
+                <a id="view-button" :href="project.url" target="_blank" class="text-white font-roboto_mono_regular py-2 px-4 w-fit text-xs rounded-lg">
                     view-project
                 </a>
             </div>

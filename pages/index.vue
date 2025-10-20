@@ -117,14 +117,14 @@ function handleResize() {
   font-size: 18px;
   line-height: 1;
   color: #E5E9F0;
-  font-family: 'Fira Code Retina';
+	font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
 #hello .head h1 {
   font-size: 58px;
   line-height: 1;
   color: #E5E9F0;
-  font-family: 'Fira Code Regular';
+	font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   padding-top: 1rem; /* 16px */
   padding-bottom: 1rem; /* 16px */
 }
@@ -133,7 +133,7 @@ function handleResize() {
   font-size: 32px;
   line-height: 1;
   color: #4D5BCE;
-  font-family: 'Fira Code Retina';
+	font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
 .head {
@@ -149,12 +149,12 @@ function handleResize() {
   font-size: 14px;
   line-height: 1;
   color: #8da9c6;
-  font-family: 'Fira Code Retina';
+	font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   padding-bottom: 1rem; /* 16px */
 }
 
 .code {
-  font-family: 'Fira Code Medium';
+	font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   color: #E5E9F0;
 }
 

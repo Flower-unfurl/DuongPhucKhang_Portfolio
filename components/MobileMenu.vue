@@ -3,7 +3,7 @@
 
     <!-- header -->
     <div id="mobile-header" class="w-full h-16 flex justify-between items-center">
-      <NuxtLink class="text-menu-text font-fira_retina flex h-full items-center mx-5" to="/" @click="goHome()">
+  <NuxtLink class="text-menu-text font-roboto_mono_regular flex h-full items-center mx-5" to="/" @click="goHome()">
         {{ config.logoName }}
       </NuxtLink>
       <img src="/icons/burger.svg" alt="Open menu" v-if="!menuOpen" @click="toggleMobileMenu()"
@@ -83,7 +83,7 @@ const isActive = (route) => {
 
 #nav-link-mobile {
   border-bottom: 1px solid #1E2D3D;
-  @apply text-menu-text font-fira_retina px-6 py-4 flex items-center;
+  @apply text-menu-text font-roboto_mono_regular px-6 py-4 flex items-center;
 }
 
 #nav-link-mobile.active {

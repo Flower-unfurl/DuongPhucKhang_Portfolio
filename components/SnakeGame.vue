@@ -11,24 +11,24 @@
       <!-- Game Screen -->
       <div id="game-screen" ref="gameScreen"></div>
 
-      <button id="start-button" class="font-fira_retina" @click="startGame">start-game</button>
+  <button id="start-button" class="font-roboto_mono_regular" @click="startGame">start-game</button>
 
       <!-- Game Over -->
       <div id="game-over" class="hidden">
-        <span class="font-fira_retina text-greenfy bg-bluefy-dark h-12 flex items-center justify-center">GAME OVER!</span>
-        <button class="font-fira_retina text-menu-text text-sm flex items-center justify-center w-full py-6 hover:text-white" @click="startAgain">start-again</button>
+  <span class="font-roboto_mono_regular text-greenfy bg-bluefy-dark h-12 flex items-center justify-center">GAME OVER!</span>
+  <button class="font-roboto_mono_regular text-menu-text text-sm flex items-center justify-center w-full py-6 hover:text-white" @click="startAgain">start-again</button>
       </div>
 
       <div id="congrats" class="hidden">
-        <span class="font-fira_retina text-greenfy bg-bluefy-dark h-12 flex items-center justify-center">WELL DONE!</span>
-        <button class="font-fira_retina text-menu-text text-sm flex items-center justify-center w-full py-6 hover:text-white" @click="startAgain">play-again</button>
+  <span class="font-roboto_mono_regular text-greenfy bg-bluefy-dark h-12 flex items-center justify-center">WELL DONE!</span>
+  <button class="font-roboto_mono_regular text-menu-text text-sm flex items-center justify-center w-full py-6 hover:text-white" @click="startAgain">play-again</button>
       </div>
 
       <div id="console-menu" class="h-full flex flex-col items-end justify-between">
 
         <div>
 
-        <div id="instructions" class="font-fira_retina text-sm text-white">
+  <div id="instructions" class="font-roboto_mono_regular text-sm text-white">
           <p>// use your keyboard</p>
           <p>// arrows to play</p>
 
@@ -57,7 +57,7 @@
 
         <!-- score board -->
         <div id="score-board" class="w-full flex flex-col pl-5">
-          <p class="font-fira_retina text-white pt-5">// food left</p>
+          <p class="font-roboto_mono_regular text-white pt-5">// food left</p>
 
           <div id="score" class="grid grid-cols-5 gap-5 justify-items-center pt-5 w-fit">
             <div class="food"></div>
@@ -75,7 +75,7 @@
         </div>
       </div>
         <!-- skip -->
-        <NuxtLink id="skip-btn" to="/about-me" class="font-fira_retina flex hover:bg-white/20">
+  <NuxtLink id="skip-btn" to="/about-me" class="font-roboto_mono_regular flex hover:bg-white/20">
           skip
         </NuxtLink>
         

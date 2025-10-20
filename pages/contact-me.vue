@@ -18,7 +18,7 @@
                 <div id="links">
                     <div v-for="(source, key) in contact.direct.sources" :key="key" class="link">
                         <img :src="'/icons/' + key + '.svg'" alt="">
-                        <a v-html="source" href="/" class="font-fira_retina text-menu-text hover:text-white"></a>
+                        <a v-html="source" href="/" class="font-roboto_mono_regular text-menu-text hover:text-white"></a>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                 <div id="links">
                     <div v-for="(source, key) in contact.find_me_also_in.sources" :key="key" class="link">
                         <img src="/icons/link.svg" alt="">
-                        <a :href="source.url + source.user" class="font-fira_retina text-menu-text hover:text-white" target="_blank">{{ source.title }}</a>
+                        <a :href="source.url + source.user" class="font-roboto_mono_regular text-menu-text hover:text-white" target="_blank">{{ source.title }}</a>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
         <div class="tab-height w-full hidden lg:flex border-right border-bot items-center">
 
                 <div class="flex items-center border-right h-full">
-                    <p class="font-fira_regular text-menu-text text-sm px-3">contacts</p>
+                    <p class="font-roboto_mono_regular text-menu-text text-sm px-3">contacts</p>
                     <img src="/icons/close.svg" alt="" class="m-3">
                 </div>
 
@@ -163,7 +163,7 @@ export default {
 }
 
 .submenu .title h3 {
-    @apply font-fira_regular;
+    @apply font-roboto_mono_regular;
     color: white;
     font-size: 16px;
 }

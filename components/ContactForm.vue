@@ -52,7 +52,7 @@ export default {
 <style>
 
 form {
-    @apply font-fira_retina text-menu-text
+    @apply font-roboto_mono_regular text-menu-text
 }
 input {
     background-color: #011221;
@@ -85,7 +85,7 @@ select:-webkit-autofill:focus {
 }
 
 #submit-button {
-    @apply font-fira_retina text-white text-sm;
+    @apply font-roboto_mono_regular text-white text-sm;
     background-color: #1E2D3D;
     border-radius: 7px;
     margin-top: 20px;

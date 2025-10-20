@@ -1,5 +1,5 @@
 <template>
-    <div class="code-container flex font-fira_retina text-menu-text">
+    <div class="code-container flex font-roboto_mono_regular text-menu-text">
         <div class="line-numbers lg:flex flex-col w-16 hidden">
 
             <!-- line numbers and asteriscs -->
@@ -7,7 +7,7 @@
                 <span class="col-span-1 mr-3">{{ n }}</span>
             </div>
         </div>
-        <div class="font-fira_retina text-white text-container">
+    <div class="font-roboto_mono_regular text-white text-container">
             <p>
                 <span class="tag">
                     const

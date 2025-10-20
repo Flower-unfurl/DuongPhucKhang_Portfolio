@@ -8,15 +8,15 @@
     <!-- section title (mobile) -->
     <div id="section-content-title" class="flex lg:hidden" @click="showFilters = !showFilters">
       <img :class="showFilters ? 'section-arrow rotate-90' : 'section-arrow'" src="/icons/arrow.svg">
-      <span class="font-fira_regular text-white text-sm">projects</span>
+  <span class="font-roboto_mono_regular text-white text-sm">projects</span>
     </div>
 
     <div v-if="showFilters" id="filter-menu"
-      class="w-full flex-col border-right font-fira_regular text-menu-text lg:flex">
+  class="w-full flex-col border-right font-roboto_mono_regular text-menu-text lg:flex">
       <!-- title -->
       <div id="section-content-title" class="hidden lg:flex items-center min-w-full">
         <img id="section-arrow-menu" src="/icons/arrow.svg" alt="" class="section-arrow mx-3">
-        <p class="font-fira_regular text-white text-sm">projects</p>
+  <p class="font-roboto_mono_regular text-white text-sm">projects</p>
       </div>
 
       <!-- filter menu -->
@@ -37,7 +37,7 @@
       <!-- windows tab -->
       <div class="tab-height w-full hidden lg:flex border-bot items-center">
         <div class="flex items-center border-right h-full">
-          <p v-for="filter in filters" :key="filter" class="font-fira_regular text-menu-text text-sm px-3">{{ filter }};
+          <p v-for="filter in filters" :key="filter" class="font-roboto_mono_regular text-menu-text text-sm px-3">{{ filter }};
           </p>
           <img src="/icons/close.svg" alt="" class="m-3">
         </div>
@@ -46,16 +46,16 @@
       <!-- windows tab mobile -->
       <div id="tab" class="flex lg:hidden items-center">
         <span class="text-white"> // </span>
-        <p class="font-fira_regular text-white text-sm px-3">projects</p>
+  <p class="font-roboto_mono_regular text-white text-sm px-3">projects</p>
         <span class="text-menu-text"> / </span>
-        <p v-for="filter in filters" :key="filter" class="font-fira_regular text-menu-text text-sm px-3">{{ filter }};
+  <p v-for="filter in filters" :key="filter" class="font-roboto_mono_regular text-menu-text text-sm px-3">{{ filter }};
         </p>
       </div>
 
       <!-- projects -->
       <div id="projects-case" class="grid grid-cols-1 lg:grid-cols-2 max-w-full h-full overflow-scroll lg:self-center">
         <div id="not-found"
-          class="hidden flex flex-col font-fira_retina text-menu-text my-5 h-full justify-center items-center">
+          class="hidden flex flex-col font-roboto_mono_regular text-menu-text my-5 h-full justify-center items-center">
           <span class="flex justify-center text-4xl pb-3">
             X__X
           </span>

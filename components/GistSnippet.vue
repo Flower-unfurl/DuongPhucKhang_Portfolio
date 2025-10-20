@@ -10,15 +10,15 @@
     
                 <!-- username & gist date info -->
                 <div class="flex flex-col">
-                    <a id="username" :href="'https://github.com/' + gist.owner.login" target="_blank" class="font-fira_bold text-purple-text text-xs pb-1 hover:cursor-pointer">
+                    <a id="username" :href="'https://github.com/' + gist.owner.login" target="_blank" class="font-roboto_mono_bold text-purple-text text-xs pb-1 hover:cursor-pointer">
                         @{{ gist.owner.login }}
                     </a>
-                    <p class="font-fira_retina text-xs text-menu-text">Created {{ monthsAgo }} months ago</p>
+                    <p class="font-roboto_mono_regular text-xs text-menu-text">Created {{ monthsAgo }} months ago</p>
                 </div>
             </div>
 
             <!-- details and stars -->
-            <div class="flex text-menu-text font-fira_retina text-xs justify-self-end lg:mx-2">
+            <div class="flex text-menu-text font-roboto_mono_regular text-xs justify-self-end lg:mx-2">
                 <div class="flex lg:mx-2 hover:cursor-pointer hover:text-white">
                     <img src="/icons/gist/comments.svg" alt="" class="w-4 h-4 mr-2">
                     <span @click="showComment(gist.id)">details</span>
@@ -32,7 +32,7 @@
         </div>
 
         <highlightjs class="snippet-container" :code="content"/>
-        <div :id="'comment' + gist.id" class="flex hidden justify-between text-menu-text font-fira_retina mt-4 pt-4 border-top">
+    <div :id="'comment' + gist.id" class="flex hidden justify-between text-menu-text font-roboto_mono_regular mt-4 pt-4 border-top">
             <p id="comment" v-if="comment" class="w-5/6">{{ comment }}</p>
             <p v-else class="w-5/6">No comments.</p>
             <img src="/icons/close.svg" alt="" class="hover:cursor-pointer" @click="showComment(gist.id)">

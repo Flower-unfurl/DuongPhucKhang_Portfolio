@@ -1,5 +1,5 @@
 <template>
-    <footer class='flex md:justify-between border-top text-menu-text font-fira_retina pr-2'>
+    <footer class='flex md:justify-between border-top text-menu-text font-roboto_mono_regular pr-2'>
 
         <!-- social icons -->
     <div class="w-full md:w-auto md:flex-none flex justify-between md:justify-start">
