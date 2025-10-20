@@ -71,22 +71,22 @@
         "social": {
             "github": {
                 "title": "Github profile",
-                "url": "https://github.com/Flower-unfurl",
+                "url": "https://github.com/",
                 "user": "Flower-unfurl"
             },
             "facebook": {
                 "title": "Facebook profile",
-                "url": "https://www.facebook.com/khangoggyy",
-                "user": "Khang Cà Chua"
+                "url": "https://www.facebook.com/",
+                "user": "khangoggyy"
             },
             "twitter": {
                 "title": "Twitter account",
-                "url": "https://x.com/AiharaChidori",
-                "user": "Sinistra"
+                "url": "https://x.com/",
+                "user": "AiharaChidori"
             },
             "instagram": {
                 "title": "Instagram account",
-                "url": "https://www.instagram.com/_oggykhng_/",
+                "url": "https://www.instagram.com/",
                 "user": "_oggykhng_"
             }
         },
@@ -95,25 +95,25 @@
             "sources": {
                 "youtube": {
                     "title": "YouTube channel",
-                    "url": "https://www.youtube.com/@khangdp9410",
-                    "user": "khangdp9410"
+                    "url": "https://youtube.com/",
+                    "user": "@khangdp9410"
                 },
                 "instagram": {
                     "title": "Instagram account",
-                    "url": "https://instagram.com/_oggykhng_/",
+                    "url": "https://instagram.com/",
                     "user": "_oggykhng_"
                 },
                 "facebook": {
                     "title": "Facebook profile",
-                    "url": "https://www.facebook.com/khangoggyy",
-                    "user": "Khang Cà Chua"
+                    "url": "https://facebook.com/",
+                    "user": "khangoggyy"
                 }
             }
         }
     },
     "gists": {
-        "1": "83861a67e377633ee8368df01ee3a355",
-        "2": "694c1f32332788a2ac7f37b09e5aa40e"
+        "1": "7e1e107649361d6439336bb0d0453e8c",
+        "2": "75d1870661f26a569fa303baecea88e9"
     },
     "projects": {
         "1": {
