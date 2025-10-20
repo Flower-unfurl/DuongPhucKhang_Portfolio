@@ -2,8 +2,9 @@
   	<main v-if="!loading" id="hello">
 
     	<!-- gradients -->
-    	<div class="css-blurry-gradient-blue"></div>
     	<div class="css-blurry-gradient-green"></div>
+    	<div class="css-blurry-gradient-magenta"></div>
+		<div class="css-blurry-gradient-blue"></div>
 
 		<section class="hero">
 		
@@ -210,6 +211,19 @@ function handleResize() {
 	border-radius: 0% 50% 0% 50%;
 	filter: blur(70px);
   background: radial-gradient(circle at 50% 50%,rgba(67, 217, 173, 1), rgba(76, 0, 255, 0));
+  opacity: 0.5;
+  z-index: 10;
+}
+
+.css-blurry-gradient-magenta {
+  position: fixed;
+  top: 10%;
+  left: 10%;
+  width: 400px;
+  height: 400px;
+	border-radius: 50% 0% 50% 0%;
+	filter: blur(100px);
+  background: radial-gradient(circle at 50% 50%,rgba(255, 0, 255, 1), rgba(76, 0, 255, 0));
   opacity: 0.5;
   z-index: 10;
 }

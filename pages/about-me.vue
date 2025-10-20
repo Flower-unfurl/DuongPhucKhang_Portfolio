@@ -5,7 +5,7 @@
       <h2>_about-me</h2>
     </div>
 
-    <div id="page-menu" class="w-full flex">
+  <div id="page-menu" class="w-full flex lg:flex-none" :style="pageMenuStyle">
 
       <!-- DESKTOP section icons -->
       <div id="sections">
@@ -15,7 +15,7 @@
       </div>
 
       <!-- focused section content -->
-      <div id="section-content" class="hidden lg:block w-full h-full border-right">
+  <div id="section-content" class="hidden lg:block w-full h-full border-right">
 
         <!-- title -->
         <div id="section-content-title" class="hidden lg:flex items-center min-w-full">
@@ -45,10 +45,10 @@
           <img id="section-arrow-menu" src="/icons/arrow.svg" alt="" class="section-arrow mx-3 open">
           <p v-html="config.contacts.direct.title" class="font-fira_regular text-white text-sm"></p>
         </div>
-        <div id="contact-sources" class="hidden lg:flex lg:flex-col my-2">
+        <div id="contact-sources" class="hidden lg:flex lg:flex-col my-2 pr-2">
           <div v-for="(source, key) in config.contacts.direct.sources" :key="key" class="flex items-center mb-2">
             <img :src="'/icons/' + key + '.svg'" alt="" class="mx-4">
-            <a v-html="source" href="/" class="font-fira_retina text-menu-text hover:text-white"></a>
+            <a v-html="source" href="/" class="font-fira_retina text-menu-text hover:text-white break-all"></a>
           </div>
         </div>
 
@@ -102,6 +102,11 @@
       </div>
 
     </div>
+    <!-- Drag handle between left menu and content (desktop only) -->
+    <div id="resize-handle"
+      class="hidden lg:block w-1 cursor-col-resize bg-transparent hover:bg-[#1E2D3D] border-right select-none"
+      @mousedown="startResize"
+    ></div>
     <!-- MENU END -->
 
     <!-- content -->
@@ -268,6 +273,23 @@
   padding: 0px 25px;
 }
 
+/* Resizable left menu (desktop) using CSS variable --pmw */
+@media (min-width: 1024px) {
+  #page-menu {
+    width: var(--pmw, 275px) !important;
+    min-width: var(--pmw, 275px) !important;
+    max-width: var(--pmw, 275px) !important;
+  }
+  #resize-handle {
+    min-height: 100%;
+  }
+}
+
+/* Safety: wrap long contact text like emails */
+#contact-sources a {
+  word-break: break-word;
+}
+
 </style>
 
 <script>
@@ -278,6 +300,13 @@ export default {
       currentSection: 'personal-info',
       folder: 'bio',
       loading: true,
+      // Resizable left panel (page menu)
+      pageMenuWidth: 275,
+      minWidth: 220,
+      maxWidth: 480,
+      isResizing: false,
+      startX: 0,
+      startWidth: 275,
     }
   },
   /**
@@ -289,6 +318,13 @@ export default {
     }
   },
   computed: {
+    // Inline CSS variable to drive width with !important override in style block
+    pageMenuStyle() {
+      // Use CSS custom property to override global !important min/max in tailwind.css
+      return {
+        '--pmw': this.pageMenuWidth + 'px'
+      }
+    },
     // Set active class to current page link
     isActive() {
       return folder => this.folder === folder;
@@ -301,6 +337,29 @@ export default {
     },
   },
   methods: {
+    startResize(e) {
+      // Only enable on desktop
+      if (window.innerWidth < 1024) return;
+      this.isResizing = true;
+      this.startX = e.clientX;
+      this.startWidth = this.pageMenuWidth;
+      document.body.style.userSelect = 'none';
+      window.addEventListener('mousemove', this.onResize);
+      window.addEventListener('mouseup', this.stopResize);
+    },
+    onResize(e) {
+      if (!this.isResizing) return;
+      const delta = e.clientX - this.startX;
+      const next = Math.min(this.maxWidth, Math.max(this.minWidth, this.startWidth + delta));
+      this.pageMenuWidth = next;
+    },
+    stopResize() {
+      if (!this.isResizing) return;
+      this.isResizing = false;
+      document.body.style.userSelect = '';
+      window.removeEventListener('mousemove', this.onResize);
+      window.removeEventListener('mouseup', this.stopResize);
+    },
     focusCurrentSection(section) {
       this.currentSection = section.title
       this.folder = Object.keys(section.info)[0]
@@ -328,6 +387,14 @@ export default {
   },
   mounted(){
     this.loading = false
+    // Ensure initial width aligns with CSS default (275)
+    this.pageMenuWidth = Math.min(this.maxWidth, Math.max(this.minWidth, this.pageMenuWidth));
+  },
+  beforeUnmount() {
+    // Clean up in case component unmounts during resize
+    if (this.isResizing) {
+      this.stopResize();
+    }
   }
 }
 </script>

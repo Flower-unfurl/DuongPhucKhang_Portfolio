@@ -1,27 +1,28 @@
 <template>
     <header id="navbar" class="w-full hidden lg:flex flex-col">
       <nav class="w-full flex justify-between border-bot">
-        <github-corner url="https://github.com/alexdeploy/developer-portfolio-v2" />
+        <github-corner url="https://github.com/Flower-unfurl/DuongPhucKhang_Portfolio" />
           <div class="flex">
             <NuxtLink id="nav-logo" to="/">
               {{ config.logo_name }}
             </NuxtLink>
 
             <NuxtLink id="nav-link" to="/" :class="{ active: isActive('/') }">
-              _hello
+              _Hello🥰
             </NuxtLink>
-  
+
+            <!-- About Me -->
             <NuxtLink id="nav-link" to="/about-me" :class="{ active: isActive('/about-me') }">
-              _about-me
+              _About Me🍅
             </NuxtLink>
-  
+            <!-- Projects -->
             <NuxtLink id="nav-link" to="/projects" :class="{ active: isActive('/projects') }">
-              _projects
+              _Projects 👽
             </NuxtLink>
           </div>
-
+          <!-- Contact Me -->
           <NuxtLink id="nav-link-contact" to="/contact-me" :class="{ active: isActive('/contact-me')}">
-            _contact-me
+            _Contact Me 📫
           </NuxtLink>
       
       </nav>
