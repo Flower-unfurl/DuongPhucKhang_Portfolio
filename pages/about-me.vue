@@ -141,8 +141,8 @@
         <!-- text -->
         <div id="commented-text" class="flex h-full w-full lg:border-right overflow-hidden">
 
-          <div class="w-full h-full ml-5 mr-10 lg:my-5 overflow-scroll">
-            <CommentedText :text="currentText" />
+          <div class="w-full h-full ml-5 mr-10 py-4 lg:py-6 overflow-scroll">
+            <CommentedText :text="displayText" />
           </div>
           
           <!-- scroll bar -->
@@ -337,6 +337,8 @@
 </style>
 
 <script>
+// Load raw Markdown files from /content to display in CommentedText
+const mdLoaders = import.meta.glob('/content/about/**/*.md', { as: 'raw' });
 import DevConfig from '~/developer.json';
 export default {
   data() {
@@ -364,6 +366,8 @@ export default {
       isContentResizing: false,
       contentStartX: 0,
       contentStartWidth: 560,
+      // Loaded HTML from markdown (if available)
+      currentHtml: '',
     }
   },
   /**
@@ -409,6 +413,10 @@ export default {
         return f.files[this.selectedFileKey];
       }
       return f.description || '';
+    },
+    // Prefer Markdown HTML if loaded; otherwise fallback to JSON description
+    displayText() {
+      return this.currentHtml || this.currentText;
     },
     // Is a specific file active
     isFileActive() {
@@ -484,6 +492,7 @@ export default {
       // reset selection tracking
       this.selectedFileKey = null
       this.openFolders = {}
+      this.loadCurrentContent();
     },
     focusCurrentFolder(folder) {
       this.folder = folder.title
@@ -491,6 +500,7 @@ export default {
       this.currentSection = this.config.about.sections[this.currentSection].info[folder.title] ? this.currentSection : Object.keys(this.config.about.sections).find(section => this.config.about.sections[section].info[folder.title])
       // when focusing a folder directly, clear selected file
       this.selectedFileKey = null
+      this.loadCurrentContent();
     },
     /**
      * TODO: Hay que crear un método para que cuando se haga click en un folder, se muestren los archivos que contiene. Y si se hace click en un archivo, se muestre el contenido del archivo.
@@ -508,6 +518,49 @@ export default {
       // focus folder if not already
       this.folder = folderTitle
       this.selectedFileKey = fileKey
+      this.loadCurrentContent();
+    },
+    // Resolve candidate markdown paths for current selection
+    resolveContentCandidates() {
+      const section = this.currentSection;
+      const folder = this.folder;
+      const file = this.selectedFileKey;
+      const candidates = [];
+      if (file) {
+        candidates.push(`/content/about/${section}/${folder}/${file}.md`);
+      }
+      // folder-level files
+      candidates.push(`/content/about/${section}/${folder}.md`);
+      candidates.push(`/content/about/${section}/${folder}/index.md`);
+      return candidates;
+    },
+    // Minimal Markdown to HTML converter for headings and newlines (keeps footprint small)
+    convertMdToHtml(md) {
+      if (!md) return '';
+      let html = md
+        .replace(/^###\s+(.+)$/gm, '<h3>$1</h3>')
+        .replace(/^##\s+(.+)$/gm, '<h2>$1</h2>')
+        .replace(/^#\s+(.+)$/gm, '<h1>$1</h1>');
+      // Convert double newlines to paragraph breaks
+      html = html.replace(/\n\n+/g, '<br><br>');
+      // Convert single newlines to <br>
+      html = html.replace(/(?<!<br>)\n/g, '<br>');
+      return html;
+    },
+    async loadCurrentContent() {
+      try {
+        const candidates = this.resolveContentCandidates();
+        let raw = '';
+        for (const p of candidates) {
+          if (mdLoaders[p]) {
+            raw = await mdLoaders[p]();
+            break;
+          }
+        }
+        this.currentHtml = raw ? this.convertMdToHtml(raw) : '';
+      } catch (e) {
+        this.currentHtml = '';
+      }
     },
     /* Mobile */
     showContacts() {
@@ -528,6 +581,8 @@ export default {
     } catch {}
     // Default: show gists right pane on desktop, hide on mobile
     this.showGists = window.innerWidth >= 1024;
+    // Initial load of content (from markdown if available)
+    this.loadCurrentContent();
   },
   beforeUnmount() {
     // Clean up in case component unmounts during resize
