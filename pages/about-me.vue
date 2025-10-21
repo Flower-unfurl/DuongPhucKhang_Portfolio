@@ -12,6 +12,10 @@
         <div id="section-icon" v-for="section in config.about.sections" :key="section.title" :class="{ active: isSectionActive(section.title)}">
           <img :id="'section-icon-' + section.title" :src="section.icon" :alt="section.title + '-section'" @click="focusCurrentSection(section)">
         </div>
+        <!-- Code Snippet toggle icon (desktop only) -->
+        <div id="section-icon" :class="{ active: showGists }" class="hidden lg:flex justify-center my-6">
+          <img id="section-icon-code-snippet" src="/icons/gist/code-snippet.svg" alt="code-snippet-section" class="w-6 h-6" @click="toggleGists" />
+        </div>
       </div>
 
       <!-- focused section content -->
@@ -25,16 +29,18 @@
 
         <!-- folders -->
         <div>
-          <div v-for="(folder, key, index) in config.about.sections[currentSection]?.info" :key="key" class="grid grid-cols-2 items-center my-2 font-roboto_mono_regular text-menu-text" @click="focusCurrentFolder(folder)">
-            <div class="flex col-span-2 hover:text-white hover:cursor-pointer">
-              <img id="diple" src="/icons/diple.svg" alt="" :class="{ open: isOpen(folder.title)}">
+          <div v-for="(folder, key, index) in config.about.sections[currentSection]?.info" :key="key" class="grid grid-cols-2 items-center my-2 font-roboto_mono_regular text-menu-text">
+            <!-- folder header: click selects folder; arrow toggles expand -->
+            <div class="flex col-span-2 hover:text-white hover:cursor-pointer" @click="focusCurrentFolder(folder)">
+              <img id="diple" src="/icons/diple.svg" alt="" :class="{ open: openFolders[folder.title]}" @click.stop="toggleFolder(folder.title)">
               <img :src="'/icons/folder' + (index+1) + '.svg'" alt="" class="mr-3">
               <p :id="folder.title" v-html="key" :class="{ active: isActive(folder.title)}"></p>
             </div>
-            <div v-if="folder.files !== undefined" class="col-span-2">
-              <div v-for="(file, key) in folder.files" :key="key" class="hover:text-white hover:cursor-pointer flex my-2">
+            <!-- files list (only if folder has files and is open) -->
+            <div v-if="folder.files !== undefined && openFolders[folder.title]" class="col-span-2">
+              <div v-for="(file, fkey) in folder.files" :key="fkey" class="hover:text-white hover:cursor-pointer flex my-2" @click="selectFile(folder.title, fkey)">
                 <img src="/icons/markdown.svg" alt="" class="ml-8 mr-3"/>
-                <p >{{ key }}</p>
+                <p :class="{ 'text-white': isFileActive(folder.title, fkey) }">{{ fkey }}</p>
               </div> 
             </div>
           </div>
@@ -67,18 +73,19 @@
 
           <!-- folders -->
           <div :id="'folders-' + section.title" class="hidden"> <!-- <div :id="'folders-' + section.title" :class="currentSection == section.title ? 'block' : 'hidden'"> -->
-            <div v-for="(folder, key, index) in config.about.sections[section.title]?.info" :key="key" class="grid grid-cols-2 items-center my-2 font-roboto_mono_regular text-menu-text hover:text-white hover:cursor-pointer" @click="focusCurrentFolder(folder)">
-              <div class="flex col-span-2">
-                <img id="diple" src="/icons/diple.svg">
+            <div v-for="(folder, key, index) in config.about.sections[section.title]?.info" :key="key" class="grid grid-cols-2 items-center my-2 font-roboto_mono_regular text-menu-text hover:text-white hover:cursor-pointer">
+              <!-- folder header: click selects folder; arrow toggles expand -->
+              <div class="flex col-span-2" @click="focusCurrentFolder(folder)">
+                <img id="diple" src="/icons/diple.svg" :class="{ open: openFolders[folder.title]}" @click.stop="toggleFolder(folder.title)">
                 <img :src="'icons/folder' + (index+1) + '.svg'" alt="" class="mr-3">
                 <p :id="folder.title" v-html="key" :class="{ active: isActive(folder.title)}"></p>
               </div>
-              <div v-if="folder.files !== undefined" class="col-span-2">
-                <div v-for="(file, key) in folder.files" :key="key" class="hover:text-white hover:cursor-pointer flex my-2">
+              <!-- files list (only if folder has files and is open) -->
+              <div v-if="folder.files !== undefined && openFolders[folder.title]" class="col-span-2">
+                <div v-for="(file, fkey) in folder.files" :key="fkey" class="hover:text-white hover:cursor-pointer flex my-2" @click="selectFile(folder.title, fkey)">
                   <img src="/icons/markdown.svg" alt="" class="ml-8 mr-3"/>
-                  <p >{{ key }}</p>
+                  <p :class="{ 'text-white': isFileActive(folder.title, fkey) }">{{ fkey }}</p>
                 </div>
-                
               </div>
             </div>
           </div>
@@ -110,7 +117,7 @@
     <!-- MENU END -->
 
     <!-- content: resizable split between left (about) and right (gists) -->
-    <div id="content-split" class="flex flex-col lg:flex-row h-full w-full" :style="contentSplitStyle">
+  <div id="content-split" class="flex flex-col lg:flex-row h-full w-full" :style="contentSplitStyle" :class="{ 'gists-hidden': !showGists }">
       
       <!-- LEFT PANE -->
       <div id="left" class="w-full lg:flex-none flex flex-col border-right">
@@ -135,7 +142,7 @@
         <div id="commented-text" class="flex h-full w-full lg:border-right overflow-hidden">
 
           <div class="w-full h-full ml-5 mr-10 lg:my-5 overflow-scroll">
-            <CommentedText :text="config.about.sections[currentSection]?.info[folder].description" />
+            <CommentedText :text="currentText" />
           </div>
           
           <!-- scroll bar -->
@@ -151,21 +158,27 @@
       <div id="content-resize-handle"
         class="hidden lg:block w-1 cursor-col-resize bg-transparent hover:bg-[#1E2D3D] border-right select-none"
         @mousedown="startContentResize"
+        v-show="showGists"
       ></div>
 
       <!-- RIGHT PANE -->
-  <div id="right" class="max-w-full flex-1 min-w-0 flex flex-col">
+  <div id="right" class="max-w-full flex-1 min-w-0 flex flex-col" v-show="showGists">
         
-        <!-- windows tab -->
-        <div class="tab-height w-full h-full hidden lg:flex border-bot items-center"></div>
+        <!-- windows tab for gists (desktop) -->
+        <div class="tab-height w-full h-full hidden lg:flex border-bot items-center" v-if="showGists">
+          <div class="flex items-center border-right h-full">
+            <p class="font-roboto_mono_regular text-menu-text text-sm px-3">code-snippets</p>
+            <img src="/icons/close.svg" alt="" class="mx-3 hover:cursor-pointer" @click="closeGists">
+          </div>
+        </div>
 
         <!-- windows tab mobile -->
         <div class="tab-height w-full h-full flex-none lg:hidden items-center"></div>
 
         <div id="gists-content" class="flex min-w-0">
-          <div id="gists" class="flex flex-col lg:px-6 lg:py-4 flex-1 min-w-0 overflow-visible">
+          <div id="gists" class="flex flex-col lg:px-6 lg:py-4 flex-1 min-w-0 lg:min-w-[340px] lg:max-w-[1280px] overflow-visible">
             <!-- title -->
-            <h3 class="text-white lg:text-menu-text mb-4 text-sm">// Code snippet showcase:</h3>
+            <h3 class="text-white lg:text-menu-text mb-4 text-sm"># Code snippet showcase:</h3>
 
             <div class="flex flex-col overflow-scroll min-w-0">
               <!-- snippets -->
@@ -312,6 +325,13 @@
   #content-resize-handle {
     min-height: 100%;
   }
+  /* When gists are hidden, expand left to full width */
+  #content-split.gists-hidden #left {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    flex: 1;
+  }
 }
 
 </style>
@@ -323,7 +343,13 @@ export default {
     return {
       currentSection: 'personal-info',
       folder: 'bio',
+      // Selected file key within the current folder (if any)
+      selectedFileKey: null,
+      // Track expanded/collapsed state per folder
+      openFolders: {},
       loading: true,
+      // Right pane visibility (gists)
+      showGists: true,
       // Resizable left panel (page menu)
       pageMenuWidth: 275,
       minWidth: 220,
@@ -371,6 +397,22 @@ export default {
     },
     isOpen() {
       return folder => this.folder === folder;
+    },
+    // Current folder object
+    currentFolderObj() {
+      return this.config?.about?.sections?.[this.currentSection]?.info?.[this.folder] || {};
+    },
+    // Text to show: selected file content or folder description
+    currentText() {
+      const f = this.currentFolderObj;
+      if (this.selectedFileKey && f.files && f.files[this.selectedFileKey]) {
+        return f.files[this.selectedFileKey];
+      }
+      return f.description || '';
+    },
+    // Is a specific file active
+    isFileActive() {
+      return (folderTitle, fileKey) => this.folder === folderTitle && this.selectedFileKey === fileKey;
     },
   },
   methods: {
@@ -426,17 +468,29 @@ export default {
       // persist
       try { localStorage.setItem('about_content_left_width', String(this.contentLeftWidth)); } catch {}
     },
+    // Toggle gists right pane
+    toggleGists() {
+      this.showGists = !this.showGists;
+    },
+    closeGists() {
+      this.showGists = false;
+    },
     focusCurrentSection(section) {
       this.currentSection = section.title
       this.folder = Object.keys(section.info)[0]
 
       document.getElementById('folders-' + section.title).classList.toggle('hidden') // show folders
       document.getElementById('section-arrow-' + section.title).classList.toggle('rotate-90'); // rotate arrow
+      // reset selection tracking
+      this.selectedFileKey = null
+      this.openFolders = {}
     },
     focusCurrentFolder(folder) {
       this.folder = folder.title
       // handle if folder belongs to the current section. It happens when you click on a folder from a different section in mobile view.
       this.currentSection = this.config.about.sections[this.currentSection].info[folder.title] ? this.currentSection : Object.keys(this.config.about.sections).find(section => this.config.about.sections[section].info[folder.title])
+      // when focusing a folder directly, clear selected file
+      this.selectedFileKey = null
     },
     /**
      * TODO: Hay que crear un método para que cuando se haga click en un folder, se muestren los archivos que contiene. Y si se hace click en un archivo, se muestre el contenido del archivo.
@@ -444,6 +498,16 @@ export default {
      */
     toggleFiles() {
       document.getElementById('file-' + this.folder).classList.toggle('hidden')
+    },
+    // Desktop: toggle folder expand/collapse in focused section content
+    toggleFolder(folderTitle) {
+      this.openFolders = { ...this.openFolders, [folderTitle]: !this.openFolders[folderTitle] };
+    },
+    // When user clicks a file, display its content
+    selectFile(folderTitle, fileKey) {
+      // focus folder if not already
+      this.folder = folderTitle
+      this.selectedFileKey = fileKey
     },
     /* Mobile */
     showContacts() {
@@ -462,6 +526,8 @@ export default {
         this.contentLeftWidth = saved
       }
     } catch {}
+    // Default: show gists right pane on desktop, hide on mobile
+    this.showGists = window.innerWidth >= 1024;
   },
   beforeUnmount() {
     // Clean up in case component unmounts during resize
