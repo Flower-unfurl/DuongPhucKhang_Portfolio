@@ -142,7 +142,9 @@
         <div id="commented-text" class="flex h-full w-full lg:border-right overflow-hidden">
 
           <div class="w-full h-full ml-5 mr-10 py-4 lg:py-6 overflow-scroll">
-            <CommentedText :text="displayText" />
+            <ClientOnly>
+              <CommentedText :text="displayText" />
+            </ClientOnly>
           </div>
           
           <!-- scroll bar -->
@@ -338,7 +340,7 @@
 
 <script>
 // Load raw Markdown files from /content to display in CommentedText
-const mdLoaders = import.meta.glob('/content/about/**/*.md', { as: 'raw' });
+const mdLoaders = import.meta.glob('/content/about/**/*.md', { query: '?raw', import: 'default' });
 import DevConfig from '~/developer.json';
 export default {
   data() {

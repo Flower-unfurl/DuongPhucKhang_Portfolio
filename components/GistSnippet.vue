@@ -45,6 +45,10 @@
             <p v-else>No comments.</p>
         </div>
     </div>
+    <div v-else class="gist mb-5 text-menu-text font-roboto_mono_regular text-xs">
+        <p v-if="error">Canot load gist: {{ error }}</p>
+        <p v-else>Loadig gist...</p>
+    </div>
 </template>
 
 <style>
@@ -119,14 +123,34 @@ export default {
             content: null,
             language: null,
             dataFetched: false,
-            comments: []
+            comments: [],
+            error: null
         }
     },
     mounted(){
-        fetch(`https://api.github.com/gists/${this.id}`)
-            .then(response => response.json())
+        fetch(`https://api.github.com/gists/${this.id}` , {
+            headers: {
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        })
+            .then(async (response) => {
+                if (!response.ok) {
+                    let msg = response.statusText
+                    try {
+                        const body = await response.json()
+                        if (body && body.message) msg = body.message
+                    } catch (e) { /* ignore */ }
+                    throw new Error(`${response.status} ${msg}`)
+                }
+                return response.json()
+            })
             .then(data => this.setValues(data))
-            
+            .catch((e) => {
+                // Common causes: rate limit exceeded (403), abuse detection (403)
+                this.error = e?.message || 'Lỗi không xác định khi gọi GitHub API'
+                this.dataFetched = false
+            })
     },
     methods: {
         async setValues(gist) {
@@ -135,7 +159,7 @@ export default {
         this.content = this.setSnippet(gist)
         this.language = Object.values(gist.files)[0].language
         this.dataFetched = true
-    this.comments = await this.setComments(gist.comments_url)
+        // Lazy-load comments on demand to reduce API calls
         },
         getTimeAgo(dateStr) {
             const now = new Date()
@@ -156,7 +180,12 @@ export default {
         },
         async setComments(comments_url){
             try {
-                const response = await fetch(comments_url)
+                const response = await fetch(comments_url, {
+                    headers: {
+                        'Accept': 'application/vnd.github+json',
+                        'X-GitHub-Api-Version': '2022-11-28'
+                    }
+                })
                 const data = await response.json()
                 if (Array.isArray(data)) {
                     return data.map(c => c?.body).filter(Boolean)
@@ -166,9 +195,15 @@ export default {
             }
             return []
         },
-        showComment(id) {
+        async showComment(id) {
             let comment = document.getElementById('comment' + id)
+            if (!comment) return
             comment.classList.toggle('hidden')
+            // If just opened and comments are not loaded yet, fetch lazily
+            const isVisible = !comment.classList.contains('hidden')
+            if (isVisible && this.comments.length === 0 && this.gist?.comments_url) {
+                this.comments = await this.setComments(this.gist.comments_url)
+            }
         }
     },
     components: {
