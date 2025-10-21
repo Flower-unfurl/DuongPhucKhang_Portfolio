@@ -109,10 +109,11 @@
     ></div>
     <!-- MENU END -->
 
-    <!-- content -->
-    <div class="flex flex-col lg:grid lg:grid-cols-2 h-full w-full">
+    <!-- content: resizable split between left (about) and right (gists) -->
+    <div id="content-split" class="flex flex-col lg:flex-row h-full w-full" :style="contentSplitStyle">
       
-      <div id="left" class="w-full flex flex-col border-right">
+      <!-- LEFT PANE -->
+      <div id="left" class="w-full lg:flex-none flex flex-col border-right">
         
         <!-- windows tab desktop -->
         <div class="tab-height w-full hidden lg:flex border-bot items-center">
@@ -123,57 +124,57 @@
         </div>
 
         <!-- windows tab mobile -->
-  <div id="tab-mobile" class="flex lg:hidden font-roboto_mono_regular">
-            <span class="text-white">// </span>
-            <h3 v-html="config.about.sections[currentSection]?.title" class="text-white px-2"></h3>
-            <span class="text-menu-text"> / </span>
-            <h3 v-html="config.about.sections[currentSection]?.info[folder].title" class="text-menu-text pl-2"></h3>
+        <div id="tab-mobile" class="flex lg:hidden font-roboto_mono_regular">
+          <span class="text-white">// </span>
+          <h3 v-html="config.about.sections[currentSection]?.title" class="text-white px-2"></h3>
+          <span class="text-menu-text"> / </span>
+          <h3 v-html="config.about.sections[currentSection]?.info[folder].title" class="text-menu-text pl-2"></h3>
         </div>
         
         <!-- text -->
         <div id="commented-text" class="flex h-full w-full lg:border-right overflow-hidden">
 
           <div class="w-full h-full ml-5 mr-10 lg:my-5 overflow-scroll">
-              <CommentedText :text="config.about.sections[currentSection]?.info[folder].description" />
+            <CommentedText :text="config.about.sections[currentSection]?.info[folder].description" />
           </div>
           
           <!-- scroll bar -->
-          <div id="scroll-bar" class="h-full border-left hidden lg:flex justify-center py-1">
-            <div id="scroll">
+          <div id="scroll-bar" class="h-full border-left hidden lg:flex justify-center py-1 flex-none">
+            <div id="scroll"></div>
           </div>
 
         </div>
 
       </div>
-      
-    </div>
 
-    <div id="right" class="max-w-full flex flex-col">
+      <!-- SPLITTER HANDLE -->
+      <div id="content-resize-handle"
+        class="hidden lg:block w-1 cursor-col-resize bg-transparent hover:bg-[#1E2D3D] border-right select-none"
+        @mousedown="startContentResize"
+      ></div>
+
+      <!-- RIGHT PANE -->
+  <div id="right" class="max-w-full flex-1 min-w-0 flex flex-col">
         
-      <!-- windows tab -->
-      <div class="tab-height w-full h-full hidden lg:flex border-bot items-center">
+        <!-- windows tab -->
+        <div class="tab-height w-full h-full hidden lg:flex border-bot items-center"></div>
 
-      </div>
+        <!-- windows tab mobile -->
+        <div class="tab-height w-full h-full flex-none lg:hidden items-center"></div>
 
-      <!-- windows tab mobile -->
-      <div class="tab-height w-full h-full flex-none lg:hidden items-center">
-
-      </div>
-
-        <div id="gists-content" class="flex">
-        
-          <div id="gists" class="flex flex-col lg:px-6 lg:py-4 w-full overflow-hidden">
+        <div id="gists-content" class="flex min-w-0">
+          <div id="gists" class="flex flex-col lg:px-6 lg:py-4 flex-1 min-w-0 overflow-visible">
             <!-- title -->
             <h3 class="text-white lg:text-menu-text mb-4 text-sm">// Code snippet showcase:</h3>
 
-            <div class="flex flex-col overflow-scroll">
+            <div class="flex flex-col overflow-scroll min-w-0">
               <!-- snippets -->
               <GistSnippet data-aos="fade-down" v-for="(gist, key) in config.gists" :key="key" :id="gist" />
             </div>
           </div>
 
           <!-- scroll bar -->
-          <div id="scroll-bar" class="h-full border-left hidden lg:flex justify-center py-1">
+          <div id="scroll-bar" class="h-full border-left hidden lg:flex justify-center py-1 flex-none">
             <div id="scroll"></div>
           </div>
         </div>
@@ -248,9 +249,15 @@
   overflow: hidden;
 }
 
+/* Allow right pane to show inner element scrollbars (snippets) */
+#right {
+  overflow: visible;
+}
+
 #gists-content {
   height: 100%;
-  overflow: hidden;
+  /* allow inner elements to render fully; snippet scrollbars are within their own boxes */
+  overflow: visible;
 }
 
 @media (max-width: 1024px) {
@@ -290,6 +297,23 @@
   word-break: break-word;
 }
 
+/* Resizable content split (desktop) using CSS variable --clw for left pane width */
+@media (min-width: 1024px) {
+  #content-split {
+    min-height: 0;
+  }
+  #content-split #left {
+    width: var(--clw, 48%);
+    min-width: var(--clw, 48%);
+    max-width: var(--clw, 48%);
+    /* prevent flex from stretching it */
+    flex: none;
+  }
+  #content-resize-handle {
+    min-height: 100%;
+  }
+}
+
 </style>
 
 <script>
@@ -307,6 +331,13 @@ export default {
       isResizing: false,
       startX: 0,
       startWidth: 275,
+      // Resizable content split (left about vs right gists)
+      contentLeftWidth: 560,
+      contentMinLeft: 320,
+      contentMinRight: 360,
+      isContentResizing: false,
+      contentStartX: 0,
+      contentStartWidth: 560,
     }
   },
   /**
@@ -323,6 +354,12 @@ export default {
       // Use CSS custom property to override global !important min/max in tailwind.css
       return {
         '--pmw': this.pageMenuWidth + 'px'
+      }
+    },
+    // Inline CSS variable for content split left width
+    contentSplitStyle() {
+      return {
+        '--clw': this.contentLeftWidth + 'px'
       }
     },
     // Set active class to current page link
@@ -360,6 +397,35 @@ export default {
       window.removeEventListener('mousemove', this.onResize);
       window.removeEventListener('mouseup', this.stopResize);
     },
+    // Content splitter handlers
+    startContentResize(e) {
+      if (window.innerWidth < 1024) return;
+      this.isContentResizing = true;
+      this.contentStartX = e.clientX;
+      this.contentStartWidth = this.contentLeftWidth;
+      document.body.style.userSelect = 'none';
+      window.addEventListener('mousemove', this.onContentResize);
+      window.addEventListener('mouseup', this.stopContentResize);
+    },
+    onContentResize(e) {
+      if (!this.isContentResizing) return;
+      const container = document.getElementById('content-split');
+      const containerWidth = container ? container.clientWidth : 0;
+      const delta = e.clientX - this.contentStartX;
+      let proposed = this.contentStartWidth + delta;
+      const maxLeft = Math.max(this.contentMinLeft, containerWidth - this.contentMinRight);
+      proposed = Math.min(maxLeft, Math.max(this.contentMinLeft, proposed));
+      this.contentLeftWidth = proposed;
+    },
+    stopContentResize() {
+      if (!this.isContentResizing) return;
+      this.isContentResizing = false;
+      document.body.style.userSelect = '';
+      window.removeEventListener('mousemove', this.onContentResize);
+      window.removeEventListener('mouseup', this.stopContentResize);
+      // persist
+      try { localStorage.setItem('about_content_left_width', String(this.contentLeftWidth)); } catch {}
+    },
     focusCurrentSection(section) {
       this.currentSection = section.title
       this.folder = Object.keys(section.info)[0]
@@ -389,11 +455,21 @@ export default {
     this.loading = false
     // Ensure initial width aligns with CSS default (275)
     this.pageMenuWidth = Math.min(this.maxWidth, Math.max(this.minWidth, this.pageMenuWidth));
+    // Load persisted content width if any
+    try {
+      const saved = Number(localStorage.getItem('about_content_left_width'))
+      if (!Number.isNaN(saved) && saved > 0) {
+        this.contentLeftWidth = saved
+      }
+    } catch {}
   },
   beforeUnmount() {
     // Clean up in case component unmounts during resize
     if (this.isResizing) {
       this.stopResize();
+    }
+    if (this.isContentResizing) {
+      this.stopContentResize();
     }
   }
 }

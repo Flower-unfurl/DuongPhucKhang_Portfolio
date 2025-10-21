@@ -5,26 +5,29 @@
     	<div class="css-blurry-gradient-green"></div>
     	<div class="css-blurry-gradient-magenta"></div>
 		<div class="css-blurry-gradient-blue"></div>
+		<div class="css-blurry-gradien-purple"></div>
+
+		<!-- content -->
 
 		<section class="hero">
 		
 			<div class="head">
 				<span>
-					Hi all, I am
+					Xin chào, tớ là 
 				</span>
 				<h1>{{ config.name }}</h1>
         <span class="diple flex">
           >&nbsp;
-				<h2 class="line-1 anim-typewriter max-w-fit"> {{ config.role }} </h2>
+				<h2 class="line-1 anim-typewriter max-w-fit"> {{ config.role1 }} </h2>				
         </span>
 			</div>
 
 			<div id="info">
 				<span class="action">
-					// complete the game to continue
+					# complete the game to continue
 				</span>
 				<span :class="{hide: isMobile}">
-					// you can also see it on my Github page
+					# you can also see it on my Github page
 				</span>
 				<span :class="{hide: !isMobile}">
 					// find my profile on Github:
@@ -114,25 +117,25 @@ function handleResize() {
 
 
 #hello .head span {
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1;
   color: #E5E9F0;
 	font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
 #hello .head h1 {
-  font-size: 58px;
+  font-size: 50px;
   line-height: 1;
-  color: #E5E9F0;
+  color: #ffffff;
 	font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   padding-top: 1rem; /* 16px */
   padding-bottom: 1rem; /* 16px */
 }
 
 #hello .head h2, #hello .head .diple {
-  font-size: 32px;
+  font-size: 30px;
   line-height: 1;
-  color: #4D5BCE;
+  color: #1fe0d9;
 	font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
@@ -146,7 +149,7 @@ function handleResize() {
 }
 
 #info > span {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1;
   color: #8da9c6;
 	font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
@@ -224,6 +227,19 @@ function handleResize() {
 	border-radius: 50% 0% 50% 0%;
 	filter: blur(100px);
   background: radial-gradient(circle at 50% 50%,rgba(255, 0, 255, 1), rgba(76, 0, 255, 0));
+  opacity: 0.5;
+  z-index: 10;
+}
+
+.css-blurry-gradien-purple {
+  position: fixed;
+  bottom: 15%;
+  left: 20%;
+  width: 300px;
+  height: 300px;
+	border-radius: 50% 50% 0% 0%;
+	filter: blur(70px);
+  background: radial-gradient(circle at 50% 50%,rgba(128, 0, 255, 1), rgba(76, 0, 255, 0));
   opacity: 0.5;
   z-index: 10;
 }

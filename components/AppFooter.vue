@@ -48,7 +48,7 @@ export default {
 footer {
     height: 40px;
     min-height: 40px;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 footer a:hover {

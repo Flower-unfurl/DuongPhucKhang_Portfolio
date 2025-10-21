@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 h3, h2 {
-  /*  @apply font-fira_retina; */
+  /*  @apply font-roboto-mono; */
   font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   font-size: 20px;
 }
@@ -150,7 +150,7 @@ main.page {
   }
 
   #commented-text {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   #mobile-page-title {

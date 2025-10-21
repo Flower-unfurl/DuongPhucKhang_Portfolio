@@ -20,6 +20,10 @@
             </NuxtLink>
           </div>
 
+          <NuxtLink id="nav-link" to="/blog" :class="{ active: isActive('/blog') }">
+            _Blog📝
+          </NuxtLink>
+
           <NuxtLink id="nav-link-contact" to="/contact-me" :class="{ active: isActive('/contact-me')}">
             _Contact Me 📫
           </NuxtLink>
@@ -31,6 +35,7 @@
 </template>
 
 <script setup>
+import { NuxtLink } from '#components';
 import GithubCorner from './GithubCorner.vue';
 import config from '~/developer.json';
 
@@ -86,7 +91,7 @@ export default {
 
 #navbar > nav {
   height: 45px;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 </style>

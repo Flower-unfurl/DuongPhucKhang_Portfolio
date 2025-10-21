@@ -1,7 +1,8 @@
 {
-    "name": "Duong Phuc Khang",
+    "name": "Dương Phúc Khang",
     "logo_name": "Duong-Phuc-Khang",
-    "role": "Front-end developer",
+    "role1": "Full Stack Developer",
+    "role2": "Vibe Coding",
     "about": {
         "sections": {
             "professional-info": {

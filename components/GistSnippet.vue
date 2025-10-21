@@ -13,7 +13,7 @@
                     <a id="username" :href="'https://github.com/' + gist.owner.login" target="_blank" class="font-roboto_mono_bold text-purple-text text-xs pb-1 hover:cursor-pointer">
                         @{{ gist.owner.login }}
                     </a>
-                    <p class="font-roboto_mono_regular text-xs text-menu-text">Created {{ monthsAgo }} months ago</p>
+                    <p class="font-roboto_mono_regular text-xs text-menu-text">Created {{ timeAgo }}</p>
                 </div>
             </div>
 
@@ -31,11 +31,18 @@
             
         </div>
 
-        <highlightjs class="snippet-container" :code="content"/>
-    <div :id="'comment' + gist.id" class="flex hidden justify-between text-menu-text font-roboto_mono_regular mt-4 pt-4 border-top">
-            <p id="comment" v-if="comment" class="w-5/6">{{ comment }}</p>
-            <p v-else class="w-5/6">No comments.</p>
-            <img src="/icons/close.svg" alt="" class="hover:cursor-pointer" @click="showComment(gist.id)">
+    <highlightjs class="snippet-container" :code="content"/>
+    <div :id="'comment' + gist.id" class="hidden text-menu-text font-roboto_mono_regular mt-4 pt-4 border-top">
+            <div class="flex justify-between items-center mb-2">
+                <p class="text-xs">Comments ({{ comments.length }})</p>
+                <img src="/icons/close.svg" alt="" class="hover:cursor-pointer" @click="showComment(gist.id)">
+            </div>
+            <div v-if="comments.length" class="comments-list max-h-60 overflow-y-auto pr-2">
+                <div v-for="(c, idx) in comments" :key="idx" :class="['py-2', {'border-top mt-2': idx>0}]">
+                    <p class="whitespace-pre-wrap break-words">{{ c }}</p>
+                </div>
+            </div>
+            <p v-else>No comments.</p>
         </div>
     </div>
 </template>
@@ -47,29 +54,23 @@
     border-radius: 15px;
     border: 1px solid #1E2D3D;
     font-size: 12px;
-    overflow-y: scroll;
-    overflow-x: scroll;
+    overflow-y: auto;
+    overflow-x: auto;
     max-height: 220px;
 }
 
 .snippet-container pre {
     margin: 0;
-    overflow: hidden;
     width: 100%;
-    max-height: 220px;
 }
 
 .snippet-container code {
-    white-space: pre-wrap;
-    max-height: 220px;
-    width: max-content;
-    overflow: hidden;
+    white-space: pre; /* keep long lines on one line to enable horizontal scroll */
+    width: max-content; /* let content define width so container can scroll horizontally */
 
 }
 
-.snippet-container::-webkit-scrollbar {
-    display: none;  /* Safari and Chrome */
-}
+/* show scrollbars for clarity */
 
 pre code.hljs{
     display:block;
@@ -81,8 +82,9 @@ code.hljs{
     padding:3px 5px
 }
 
-#comment {
-    font-size: 14px;
+/* comments panel: target dynamic ids like comment<gist.id> */
+[id^="comment"] {
+    font-size: 13px;
 }
 
 #username:hover {
@@ -113,11 +115,11 @@ export default {
     data(){
         return {
             gist: null,
-            monthsAgo: null,
+            timeAgo: null,
             content: null,
             language: null,
             dataFetched: false,
-            comment: null
+            comments: []
         }
     },
     mounted(){
@@ -129,33 +131,40 @@ export default {
     methods: {
         async setValues(gist) {
         this.gist = gist
-        this.monthsAgo = this.setMonths(gist.created_at)
+        this.timeAgo = this.getTimeAgo(gist.created_at)
         this.content = this.setSnippet(gist)
         this.language = Object.values(gist.files)[0].language
         this.dataFetched = true
-        this.comment = await this.setComments(gist.comments_url)
+    this.comments = await this.setComments(gist.comments_url)
         },
-        setMonths(date) {
-            let now = new Date()
-            let gistDate = new Date(date)
-            let diff = now.getTime() - gistDate.getTime()
-            let days = Math.floor(diff / (1000 * 3600 * 24))
-            let months = Math.floor(days / 30)
-            return months
+        getTimeAgo(dateStr) {
+            const now = new Date()
+            const then = new Date(dateStr)
+            const diffMs = now.getTime() - then.getTime()
+            const seconds = Math.floor(diffMs / 1000)
+            const minutes = Math.floor(seconds / 60)
+            const hours = Math.floor(minutes / 60)
+            const days = Math.floor(hours / 24)
+            if (seconds < 60) return `${seconds} seconds ago`
+            if (minutes < 60) return `${minutes} minutes ago`
+            if (hours < 24) return `${hours} hours ago`
+            return `${days} days ago`
         },
         setSnippet(gist) {
             let snippet = Object.values(gist.files)[0].content // Object.values(gist.files)[0].filename.content
             return snippet
         },
         async setComments(comments_url){
-            let response = await fetch(comments_url)
-            let data = await response.json()
-            try{
-                let body = data[0].body
-                return body
-            } catch {
-                console.log(`no comments found on ${comments_url}`)
+            try {
+                const response = await fetch(comments_url)
+                const data = await response.json()
+                if (Array.isArray(data)) {
+                    return data.map(c => c?.body).filter(Boolean)
+                }
+            } catch (e) {
+                console.log(`error fetching comments on ${comments_url}`, e)
             }
+            return []
         },
         showComment(id) {
             let comment = document.getElementById('comment' + id)
