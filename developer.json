@@ -118,55 +118,52 @@
     },
     "projects": {
         "1": {
-            "title": "_ui-animations",
-            "description": "Duis aute irure dolor in velit esse cillum dolore.",
-            "img": "/images/projects/ui-animations2.png",
+            "title": "Web dev learning",
+            "description": "Trang web học lập trình",
+            "img": "/images/projects/1.png",
             "images": [
-                "/images/projects/ui-animations2.png",
-                "/images/projects/ai-resources.png",
-                "/images/projects/worldmap.png",
-                "/images/projects/tetris-game.png"
+                "/images/projects/1.png"
             ],
-            "tech": ["Flutter"],
+            "tech": ["HTML", "CSS"],
             "details": "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
-            "url": "https://github.com/"
+            "url": "https://github.com/HyHonCuTe/Web"
         },
         "2": {
-            "title": "_ai-resources",
-            "description": "Duis aute irure dolor in velit esse cillum dolore.",
-            "img": "/images/projects/ai-resources.png",
+            "title": "JobNOVA",
+            "description": "Gig Marketplace.",
+            "img": "/images/projects/3.png",
             "images": [
                 "/images/projects/ai-resources.png"
             ],
-            "tech": ["Gatsby"],
+            "tech": ["React"],
             "details": "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
-            "url": "https://github.com/"
+            "url": "https://github.com/hungson1002/JobNOVA"
         },
         "3": {
-            "title": "_worldmap",
-            "description": "Duis aute irure dolor in velit esse cillum dolore.",
-            "img": "/images/projects/worldmap.png",
+            "title": "WEB-BUIDLER",
+            "description": "Drag/Drop to create websites.",
+            "img": "/images/projects/4.png",
             "images": [
                 "/images/projects/worldmap.png"
             ],
-            "tech": ["Angular"],
+            "tech": ["React", "HTML", "CSS"],
             "details": "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
-            "url": "https://github.com/"
+            "url": "https://github.com/hungson1002/Web-Builder"
         },
         "4": {
-            "title": "_ui-animations",
-            "description": "Duis aute irure dolor in velit esse cillum dolore.",
-            "img": "/images/projects/ui-animations.png",
+            "title": "Portfolio & Blog",
+            "description": "Tell about myself",
+            "img": "/images/projects/5.png",
             "images": [
                 "/images/projects/ui-animations.png"
             ],
-            "tech": ["React"],
+            "tech": ["Vue"],
             "details": "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
-            "url": "https://github.com/"
+            "url": "https://github.com/Flower-unfurl/DuongPhucKhang_Portfolio"
         },
         "5": {
-            "title": "_tetris-game",
-            "description": "Duis aute irure dolor in velit esse cillum dolore.",
+            "title": "Tetris Game",
+            "description": "incoming game project.",
             "img": "/images/projects/tetris-game.png",
             "images": [
                 "/images/projects/tetris-game.png"
@@ -176,8 +173,8 @@
             "url": "https://github.com/"
         },
         "6": {
-            "title": "_ethereum",
-            "description": "Duis aute irure dolor in velit esse cillum dolore.",
+            "title": "Ethereum",
+            "description": "incomming blockchain project.",
             "img": "/images/projects/ethereum.png",
             "images": [
                 "/images/projects/ethereum.png"
