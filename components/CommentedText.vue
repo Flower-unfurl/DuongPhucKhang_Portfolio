@@ -24,6 +24,11 @@ export default {
   },
   watch: {
     text() {
+      // New content replaced via v-html, clear processed flag so we rebuild structure
+      const container = this.$el ? this.$el.querySelector('.text-container') : null
+      if (container && container.dataset) {
+        delete container.dataset.processed
+      }
       this.$nextTick(() => this.processSections())
     }
   },
@@ -67,9 +72,10 @@ export default {
         console.warn('⚠️ No .text-container found')
         return
       }
-      // Clean previous processing
-      // If already processed, re-run animations and return
-      if (container.dataset.processed === 'true') {
+      // If already processed and structure exists, just re-run animations
+      const alreadyProcessed = container.dataset.processed === 'true'
+      const hasSections = container.querySelectorAll('.ct-section').length > 0
+      if (alreadyProcessed && hasSections) {
         console.log('♻️ Re-running animations on already processed content')
         this.runAnimations(container)
         return

@@ -143,7 +143,10 @@
 
           <div class="w-full h-full ml-5 mr-10 py-4 lg:py-6 overflow-scroll">
             <ClientOnly>
-              <CommentedText :text="displayText" />
+              <!-- Prefer Nuxt Content-rendered Markdown when available -->
+              <ContentRenderer v-if="bio" :value="bio" />
+              <!-- Fallback to legacy string-based renderer -->
+              <CommentedText v-else :text="displayText" />
             </ClientOnly>
           </div>
           
@@ -338,6 +341,8 @@
 
 </style>
 
+<!-- removed script setup to avoid clashing with Options API below -->
+
 <script>
 // Load raw Markdown files from /content to display in CommentedText
 const mdLoaders = import.meta.glob('/content/about/**/*.md', { query: '?raw', import: 'default' });
@@ -376,8 +381,20 @@ export default {
    * In setup we can define the data we want to use in the component before the component is created.
    */
   setup() {
+    // Fetch markdown doc for bio using Nuxt Content
+    const { data: bio } = useAsyncData('about-bio', () =>
+      queryCollection('content').path('/about/personal-info/bio').first()
+    )
+
+    // Apply SEO tags from markdown front-matter if available
+    useSeoMeta({
+      title: () => bio.value?.title,
+      description: () => bio.value?.description
+    })
+
     return {
-      config: DevConfig
+      config: DevConfig,
+      bio
     }
   },
   computed: {
