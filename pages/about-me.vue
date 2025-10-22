@@ -346,6 +346,7 @@
 <script>
 // Load raw Markdown files from /content to display in CommentedText
 const mdLoaders = import.meta.glob('/content/about/**/*.md', { query: '?raw', import: 'default' });
+const mdLoaders = import.meta.glob('/content/about/**/*.md', { query: '?raw', import: 'default' });
 import DevConfig from '~/developer.json';
 export default {
   data() {
