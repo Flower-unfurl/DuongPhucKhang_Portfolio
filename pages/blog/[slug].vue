@@ -85,9 +85,7 @@
         </header>
 
         <!-- Post content -->
-        <div class="prose prose-invert max-w-none">
-          <CommentedText :text="post.body" />
-        </div>
+        <div class="prose prose-invert max-w-none" v-html="renderedContent"></div>
 
         <!-- Footer navigation -->
         <footer class="mt-12 pt-8 border-t border-[#1E2D3D]">
@@ -105,6 +103,16 @@
 </template>
 
 <script>
+import { marked } from 'marked';
+
+// Configure marked options
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+  headerIds: true,
+  mangle: false
+});
+
 // Load all blog markdown files using Vite glob import (same as index.vue)
 const blogLoaders = import.meta.glob('/content/blog/*.md', { 
   query: '?raw', 
@@ -117,6 +125,13 @@ export default {
       post: null,
       loading: true,
       error: false
+    }
+  },
+  
+  computed: {
+    renderedContent() {
+      if (!this.post || !this.post.body) return '';
+      return marked(this.post.body);
     }
   },
   
@@ -294,6 +309,17 @@ export default {
 .prose {
   color: #607B96;
   line-height: 1.8;
+  font-size: 1rem;
+}
+
+.prose :deep(h1) {
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  font-family: 'Roboto Mono', monospace;
+  line-height: 1.2;
 }
 
 .prose :deep(h2) {
@@ -303,6 +329,9 @@ export default {
   margin-top: 2rem;
   margin-bottom: 1rem;
   font-family: 'Roboto Mono', monospace;
+  line-height: 1.3;
+  border-bottom: 1px solid #1E2D3D;
+  padding-bottom: 0.5rem;
 }
 
 .prose :deep(h3) {
@@ -312,6 +341,7 @@ export default {
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
   font-family: 'Roboto Mono', monospace;
+  line-height: 1.4;
 }
 
 .prose :deep(h4) {
@@ -327,11 +357,23 @@ export default {
   margin-top: 1rem;
   margin-bottom: 1rem;
   font-family: 'Roboto Mono', monospace;
+  line-height: 1.8;
+}
+
+.prose :deep(strong) {
+  color: #E5E9F0;
+  font-weight: 700;
+}
+
+.prose :deep(em) {
+  font-style: italic;
+  color: #C8D0DD;
 }
 
 .prose :deep(a) {
   color: #4D5BCE;
   text-decoration: underline;
+  transition: color 0.2s;
 }
 
 .prose :deep(a:hover) {
@@ -341,55 +383,81 @@ export default {
 .prose :deep(ul), .prose :deep(ol) {
   margin-top: 1rem;
   margin-bottom: 1rem;
-  padding-left: 1.5rem;
+  padding-left: 2rem;
+}
+
+.prose :deep(ul) {
+  list-style-type: disc;
+}
+
+.prose :deep(ol) {
+  list-style-type: decimal;
 }
 
 .prose :deep(li) {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
+
+.prose :deep(li > p) {
+  margin: 0.25rem 0;
 }
 
 .prose :deep(code) {
   background-color: #1E2D3D;
-  padding: 0.2rem 0.4rem;
+  padding: 0.2rem 0.5rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
   color: #43D9AD;
+  font-family: 'Roboto Mono', monospace;
 }
 
 .prose :deep(pre) {
   background-color: #011221;
   border: 1px solid #1E2D3D;
   border-radius: 0.5rem;
-  padding: 1rem;
+  padding: 1.25rem;
   overflow-x: auto;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .prose :deep(pre code) {
   background-color: transparent;
   padding: 0;
   color: #E5E9F0;
+  font-size: 0.875rem;
+  line-height: 1.6;
 }
 
 .prose :deep(blockquote) {
   border-left: 4px solid #607B96;
-  padding-left: 1rem;
+  padding-left: 1.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   font-style: italic;
-  color: #607B96;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  color: #8B9BB0;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  background-color: rgba(96, 123, 150, 0.05);
+}
+
+.prose :deep(blockquote p) {
+  margin: 0.5rem 0;
 }
 
 .prose :deep(img) {
   border-radius: 0.5rem;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+  max-width: 100%;
+  height: auto;
 }
 
 .prose :deep(hr) {
-  border-color: #1E2D3D;
+  border: none;
+  border-top: 1px solid #1E2D3D;
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
@@ -397,13 +465,14 @@ export default {
 .prose :deep(table) {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
 }
 
 .prose :deep(th), .prose :deep(td) {
   border: 1px solid #1E2D3D;
-  padding: 0.5rem;
+  padding: 0.75rem;
   text-align: left;
 }
 
@@ -411,5 +480,35 @@ export default {
   background-color: #1E2D3D;
   color: white;
   font-weight: bold;
+}
+
+.prose :deep(tr:nth-child(even)) {
+  background-color: rgba(30, 45, 61, 0.3);
+}
+
+/* Syntax highlighting for code blocks */
+.prose :deep(pre code.language-java),
+.prose :deep(pre code.language-javascript),
+.prose :deep(pre code.language-python) {
+  display: block;
+  overflow-x: auto;
+}
+
+/* Scrollbar styling for code blocks */
+.prose :deep(pre)::-webkit-scrollbar {
+  height: 8px;
+}
+
+.prose :deep(pre)::-webkit-scrollbar-track {
+  background: #011221;
+}
+
+.prose :deep(pre)::-webkit-scrollbar-thumb {
+  background: #1E2D3D;
+  border-radius: 4px;
+}
+
+.prose :deep(pre)::-webkit-scrollbar-thumb:hover {
+  background: #607B96;
 }
 </style>

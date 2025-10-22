@@ -19,6 +19,7 @@
     "animejs": "^4.2.2",
     "aos": "^2.3.4",
     "better-sqlite3": "^12.4.1",
-    "highlight.js": "^11.7.0"
+    "highlight.js": "^11.7.0",
+    "marked": "^16.4.1"
   }
 }
