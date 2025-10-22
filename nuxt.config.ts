@@ -66,7 +66,7 @@ export default defineNuxtConfig({
     cssPath: '~/assets/tailwind.css',
     configPath: 'tailwind.config',
     exposeConfig: true, // true to resolve the tailwind config in runtime. https://tailwindcss.nuxt.dev/getting-started/options/#exposeconfig
-    injectPosition: 0,
+    // injectPosition: 0,
     viewer: false,
   },
 
