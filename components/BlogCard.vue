@@ -12,7 +12,6 @@
           <img 
             v-for="tag in (post.tags || [])" 
             :key="tag" 
-            src="/icons/techs/filled/Vue.svg" 
             alt="" 
             class="w-6 h-6 mx-1 hover:opacity-75"
             :title="tag"
