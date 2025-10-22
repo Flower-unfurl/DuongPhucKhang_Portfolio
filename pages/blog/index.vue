@@ -250,18 +250,18 @@ export default {
       this.loading = false;
     },
     
-    // Parse markdown frontmatter and content
+    // Parse markdown frontmatter and content (robust)
     parseMarkdown(content, filepath) {
       // Extract slug from filepath
       const slug = filepath.split('/').pop().replace('.md', '');
-      
-      // Parse frontmatter
-      const frontmatterRegex = /^---\n([\s\S]*?)\n---/;
-      const match = content.match(frontmatterRegex);
-      
+
+      // Parse frontmatter (support both \n and \r\n)
+      const fmRegex = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/;
+      const match = content.match(fmRegex);
+
       const post = {
         _path: `/blog/${slug}`,
-        slug: slug,
+        slug,
         title: slug,
         description: '',
         date: new Date().toISOString().split('T')[0],
@@ -269,54 +269,85 @@ export default {
         cover: '/images/projects/ui-animations2.png',
         draft: false
       };
-      
+
       if (match) {
         const frontmatter = match[1];
-        const lines = frontmatter.split('\n');
-        
+        const lines = frontmatter.split(/\r?\n/);
+
         let currentKey = null;
         let currentArray = [];
-        
-        lines.forEach(line => {
-          // Handle key-value pairs
-          if (line.includes(':') && !line.trim().startsWith('-')) {
-            // Save previous array if exists
-            if (currentKey && currentArray.length > 0) {
-              post[currentKey] = currentArray;
-              currentArray = [];
+
+        const assignArrayIfAny = () => {
+          if (currentKey && currentArray.length > 0) {
+            post[currentKey] = currentArray;
+            currentArray = [];
+          }
+        };
+
+        lines.forEach((rawLine) => {
+          const line = rawLine.trim();
+          if (!line) return;
+
+          // key: value form
+          if (line.includes(':') && !line.startsWith('-')) {
+            // finalize previous array if any
+            assignArrayIfAny();
+
+            const [keyPart, ...valueParts] = line.split(':');
+            const key = keyPart.trim().toLowerCase();
+            let value = valueParts.join(':').trim();
+
+            // If empty value, treat as start of list for this key
+            if (!value) {
+              currentKey = key;
+              return;
             }
-            
-            const [key, ...valueParts] = line.split(':');
-            const value = valueParts.join(':').trim();
-            currentKey = key.trim();
-            
-            if (value) {
-              // Remove quotes if present
-              const cleanValue = value.replace(/^["']|["']$/g, '');
-              post[currentKey] = cleanValue;
+
+            // Remove wrapping quotes
+            value = value.replace(/^['"]|['"]$/g, '');
+
+            // Parse boolean
+            if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') {
+              post[key] = value.toLowerCase() === 'true';
               currentKey = null;
+              return;
             }
-          } 
-          // Handle array items
-          else if (line.trim().startsWith('-') && currentKey) {
-            const item = line.trim().substring(1).trim().replace(/^["']|["']$/g, '');
-            if (item) {
-              currentArray.push(item);
+
+            // Parse bracket arrays: ["a", "b"] or ['a','b']
+            if (value.startsWith('[') && value.endsWith(']')) {
+              const jsonish = value
+                .replace(/'/g, '"')
+                .replace(/,\s*\]/, ']');
+              try {
+                const arr = JSON.parse(jsonish);
+                if (Array.isArray(arr)) post[key] = arr;
+              } catch (e) {
+                // fallback: split by comma
+                post[key] = value
+                  .slice(1, -1)
+                  .split(',')
+                  .map(s => s.trim().replace(/^['"]|['"]$/g, ''))
+                  .filter(Boolean);
+              }
+              currentKey = null;
+              return;
             }
+
+            // Normal scalar
+            post[key] = value;
+            currentKey = null;
+          }
+          // "- item" list lines
+          else if (line.startsWith('-') && currentKey) {
+            const item = line.substring(1).trim().replace(/^['"]|['"]$/g, '');
+            if (item) currentArray.push(item);
           }
         });
-        
-        // Save last array if exists
-        if (currentKey && currentArray.length > 0) {
-          post[currentKey] = currentArray;
-        }
-        
-        // Convert string boolean to actual boolean
-        if (typeof post.draft === 'string') {
-          post.draft = post.draft.toLowerCase() === 'true';
-        }
+
+        // finalize any trailing array
+        assignArrayIfAny();
       }
-      
+
       return post;
     },
     

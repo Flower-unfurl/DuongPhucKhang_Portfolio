@@ -1,4 +1,5 @@
 ---
+title1:"Java-network" 
 title: "Socket Programming Trong Java: Cánh Cửa Kết Nối Client-Server Đơn Giản"
 description: "Tìm hiểu cách xây dựng ứng dụng mạng cơ bản với Socket và ServerSocket trong Java, từ chat đơn giản đến hệ thống phân tán."
 date: 2025-10-22

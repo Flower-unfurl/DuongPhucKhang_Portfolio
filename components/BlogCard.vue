@@ -2,8 +2,8 @@
   <div id="blog-post" :key="key" class="lg:mx-5">
     <span class="flex text-sm my-3">
       <h3 v-if="index == null" class="text-purplefy font-roboto_mono_bold mr-3">Post {{ key + 1 }}</h3>
-      <h3 v-else class="text-purplefy font-roboto_mono_bold mr-3">Post {{ index + 1 }}</h3>
-      <h4 class="font-roboto_mono_regular text-menu-text"> // {{ post.title }}</h4>
+      <h3 v-else class="text-purplefy font-roboto_mono_bold mr-3">Post{{ index + 1 }}</h3>
+      <h4 class="font-roboto_mono_regular text-menu-text"> // {{ post.title1 }}</h4>
     </span>
 
     <div id="blog-card" class="flex flex-col">
