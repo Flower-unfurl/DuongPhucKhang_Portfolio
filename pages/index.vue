@@ -24,10 +24,10 @@
 
 			<div id="info">
 				<span class="action">
-					# complete the game to continue
+					# Hãy hoàn thành trò chơi để xem thêm thông tin về tôi
 				</span>
 				<span :class="{hide: isMobile}">
-					# you can also see it on my Github page
+					# Bạn cũng có thể tìm tôi ở:
 				</span>
 				<span :class="{hide: !isMobile}">
 					// find my profile on Github:
