@@ -15,6 +15,233 @@ export default {
       type: String,
       required: true
     }
+  },
+  data() {
+    return {
+      animeLib: null,
+      isMobile: false,
+    }
+  },
+  watch: {
+    text() {
+      this.$nextTick(() => this.processSections())
+    }
+  },
+  mounted() {
+    // Detect mobile
+    if (typeof window !== 'undefined') {
+      this.isMobile = window.innerWidth < 1024
+      window.addEventListener('resize', this.handleResize)
+    }
+    // Load anime.js on client only and normalize export shape
+    if (typeof window !== 'undefined') {
+      import('animejs')
+        .then(mod => {
+          this.animeLib = mod?.default || mod?.anime || mod
+          console.log('✅ Anime.js loaded:', !!this.animeLib)
+        })
+        .catch(err => {
+          console.error('❌ Failed to load anime.js:', err)
+        })
+        .finally(() => {
+          // Only process after anime is loaded (or failed)
+          this.$nextTick(() => {
+            console.log('🔄 Processing sections, mobile:', this.isMobile)
+            this.processSections()
+          })
+        })
+    }
+  },
+  beforeUnmount() {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', this.handleResize)
+    }
+  },
+  methods: {
+    handleResize() {
+      this.isMobile = window.innerWidth < 1024
+    },
+    processSections() {
+      const container = this.$el.querySelector('.text-container')
+      if (!container) {
+        console.warn('⚠️ No .text-container found')
+        return
+      }
+      // Clean previous processing
+      // If already processed, re-run animations and return
+      if (container.dataset.processed === 'true') {
+        console.log('♻️ Re-running animations on already processed content')
+        this.runAnimations(container)
+        return
+      }
+      const headings = container.querySelectorAll('h1, h2, h3')
+      console.log(`📝 Found ${headings.length} headings`)
+      if (!headings.length) return
+      headings.forEach(h => h.classList.add('ct-heading'))
+      headings.forEach((h, idx) => {
+        // Ensure we work relative to the heading's actual parent, not just container
+        const parent = h.parentNode
+        if (!parent) return
+
+        // Capture the sibling that comes after the heading BEFORE moving it
+        let cursor = h.nextSibling
+
+        const section = document.createElement('div')
+        section.className = 'ct-section'
+        // Insert the new section before the heading within its own parent
+        parent.insertBefore(section, h)
+
+        // Desktop: Wrap heading in layers for stripe + grid effects
+        if (!this.isMobile) {
+          console.log(`🖥️ Desktop mode: Creating wrapper for heading ${idx + 1}`)
+          const headingWrapper = document.createElement('div')
+          headingWrapper.className = 'ct-heading-wrapper'
+
+          // Grid background (parallax effect)
+          const grid = document.createElement('div')
+          grid.className = 'ct-grid'
+          headingWrapper.appendChild(grid)
+
+          // Stripe pattern overlay
+          const stripes = document.createElement('div')
+          stripes.className = 'ct-stripes'
+          headingWrapper.appendChild(stripes)
+
+          // Heading itself (moving node from parent to wrapper)
+          headingWrapper.appendChild(h)
+          section.appendChild(headingWrapper)
+        } else {
+          console.log(`📱 Mobile mode: Splitting letters for heading ${idx + 1}`)
+          // Mobile: Split text into letters for stagger effect
+          const text = h.textContent || ''
+          h.innerHTML = ''
+          text.split('').forEach((char) => {
+            const span = document.createElement('span')
+            span.className = 'ct-char'
+            span.textContent = char === ' ' ? '\u00A0' : char // preserve spaces
+            h.appendChild(span)
+          })
+          section.appendChild(h)
+        }
+
+        const divider = document.createElement('div')
+        divider.className = 'ct-divider'
+        section.appendChild(divider)
+
+        const content = document.createElement('div')
+        content.className = 'ct-content'
+        // Move subsequent siblings from the ORIGINAL parent into this content block
+        while (
+          cursor &&
+          cursor.parentNode === parent &&
+          !(cursor.tagName && /^H[1-3]$/.test(cursor.tagName))
+        ) {
+          const next = cursor.nextSibling
+          content.appendChild(cursor)
+          cursor = next
+        }
+        section.appendChild(content)
+      })
+      container.dataset.processed = 'true'
+      console.log('✨ Starting animations...')
+      this.runAnimations(container)
+    },
+    runAnimations(container) {
+      if (!this.animeLib) return
+      
+      if (!this.isMobile) {
+        // Desktop animations: stripe + grid + underline + shine
+        
+        // 1. Grid parallax (subtle movement)
+        this.animeLib({
+          targets: container.querySelectorAll('.ct-grid'),
+          translateX: [-10, 0],
+          translateY: [-5, 0],
+          opacity: [0, 0.15],
+          duration: 800,
+          easing: 'easeOutQuad',
+          delay: (_, i) => i * 120
+        })
+        
+        // 2. Stripe pattern reveal (clip-path or scaleX)
+        this.animeLib({
+          targets: container.querySelectorAll('.ct-stripes'),
+          scaleX: [0, 1],
+          opacity: [0, 0.6],
+          duration: 700,
+          easing: 'easeOutExpo',
+          delay: (_, i) => 50 + i * 120,
+          transformOrigin: 'left center'
+        })
+        
+        // 3. Heading text fade + scale
+        this.animeLib({
+          targets: container.querySelectorAll('.ct-heading'),
+          opacity: [0, 1],
+          scaleX: [0.95, 1],
+          duration: 600,
+          easing: 'easeOutQuad',
+          delay: (_, i) => 100 + i * 120,
+          transformOrigin: 'left center'
+        })
+        
+        // 4. Divider sweep (underline)
+        this.animeLib({
+          targets: container.querySelectorAll('.ct-divider'),
+          scaleX: [0, 1],
+          duration: 750,
+          easing: 'easeOutExpo',
+          delay: (_, i) => 200 + i * 120,
+          transformOrigin: 'left center'
+        })
+        
+        // 5. Content stagger (paragraphs)
+        const contentElements = container.querySelectorAll('.ct-content')
+        contentElements.forEach((el, idx) => {
+          const children = Array.from(el.children).filter(c => c.tagName === 'BR' ? false : true)
+          this.animeLib({
+            targets: children.length > 0 ? children : [el],
+            opacity: [0, 1],
+            translateY: [8, 0],
+            duration: 550,
+            easing: 'easeOutQuad',
+            delay: this.animeLib.stagger(60, { start: 350 + idx * 140 })
+          })
+        })
+        
+      } else {
+        // Mobile animations: letter-by-letter + simple fade for content
+        
+        // 1. Letter-by-letter stagger
+        this.animeLib({
+          targets: container.querySelectorAll('.ct-char'),
+          opacity: [0, 1],
+          translateY: [8, 0],
+          duration: 400,
+          easing: 'easeOutQuad',
+          delay: this.animeLib.stagger(25) // 25ms per letter
+        })
+        
+        // 2. Divider simple reveal
+        this.animeLib({
+          targets: container.querySelectorAll('.ct-divider'),
+          scaleX: [0, 1],
+          duration: 500,
+          easing: 'easeOutQuad',
+          delay: (_, i) => 300 + i * 100,
+          transformOrigin: 'left center'
+        })
+        
+        // 3. Content simple fade-in
+        this.animeLib({
+          targets: container.querySelectorAll('.ct-content'),
+          opacity: [0, 1],
+          duration: 450,
+          easing: 'easeOutQuad',
+          delay: (_, i) => 400 + i * 100
+        })
+      }
+    }
   }
 };
 </script>
