@@ -13,7 +13,7 @@
 		
 			<div class="head">
 				<span>
-					Xin chào, tôi là 
+					Xin chào, tớ là 
 				</span>
 				<h1>{{ config.name }}</h1>
         <span class="diple flex">

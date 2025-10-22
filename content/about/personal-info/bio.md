@@ -1,4 +1,3 @@
-
 # LỜI GIỚI THIỆU
 Hiện tại tôi là sinh viên IT năm 3, đang theo học ngành công nghệ thông tin chuyên ngành công nghệ phần mềm tại trường HUTECH. Từ thuở nhỏ tôi đã có niềm đam mê đến kiến trúc máy tình và những chương trình thú vị hoạt động trên máy tính, từng ngày trôi qua tôi càng muốn hiểu sâu và học hỏi thêm về cách các chương trình hoạt động, các phần mềm, phần cứng, firmware và những thuật ngữ mà những kỹ sư về công nghệ họ thường sử dụng. Niềm đam mê ấy vẫn luôn là ngọn lửa âm ỉ trong tôi, đó cũng là lý do tôi chọn theo ngành này.
 
