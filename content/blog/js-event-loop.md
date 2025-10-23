@@ -1,10 +1,10 @@
 ---
-title1:"JavaScript Event Loop" 
+title1: "JS Event Loop" 
 title: "JavaScript: Khám Phá Event Loop - Động Cơ Vận Hành Bất Đồng Bộ"
 description: "Hiểu rõ cách JavaScript, dù là đơn luồng, vẫn xử lý được các tác vụ bất đồng bộ mà không làm treo UI, thông qua cơ chế Event Loop, Call Stack, và Callback Queue."
 date: 2025-10-26
 tags: ["JavaScript", "Event Loop", "Async", "Callback Queue", "Call Stack", "Microtask"]
-cover: "/images/blog/javascrip-eventloop.png"
+cover: "/images/blog/javascript-eventloop.png"
 draft: false
 ---
 
