@@ -4,7 +4,7 @@ title: "Socket Programming Trong Java: Cánh Cửa Kết Nối Client-Server Đ�
 description: "Tìm hiểu cách xây dựng ứng dụng mạng cơ bản với Socket và ServerSocket trong Java, từ chat đơn giản đến hệ thống phân tán."
 date: 2025-10-22
 tags: ["Java", "Network", "Socket", "Programming"]
-cover: "/images/projects/ui-animations2.png"
+cover: "/images/blog/java-network-socket.png"
 draft: false
 ---
 

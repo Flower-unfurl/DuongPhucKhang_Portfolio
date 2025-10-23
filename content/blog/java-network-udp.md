@@ -4,7 +4,7 @@ title: "UDP Trong Java: Khi Tốc Độ Quan Trọng Hơn Độ Tin Cậy"
 description: "Tìm hiểu về UDP (User Datagram Protocol) trong Java. Bài viết này khám phá sự khác biệt giữa TCP và UDP, và cách sửâ dụng DatagramSocket và DatagramPacket."
 date: 2025-10-24
 tags: ["Java", "Network", "UDP", "DatagramSocket", "TCP"]
-cover: "/images/projects/ui-animations2.png"
+cover: "/images/blog/java-network-udp.png"
 draft: false
 ---
 

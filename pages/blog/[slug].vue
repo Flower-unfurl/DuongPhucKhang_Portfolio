@@ -338,7 +338,7 @@ export default {
 
 /* Prose styles for markdown content */
 .prose {
-  color: #607B96;
+  color: #85adc3;
   line-height: 1.8;
   font-size: 1rem;
 }
@@ -392,7 +392,7 @@ export default {
 }
 
 .prose :deep(strong) {
-  color: #E5E9F0;
+  color: #0285ff;
   font-weight: 700;
 }
 

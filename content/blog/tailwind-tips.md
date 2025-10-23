@@ -1,4 +1,5 @@
 ---
+title1: "Mẹo trong Tailwind CSS"
 title: "Tailwind CSS Tips & Tricks"
 description: "Những mẹo nhỏ giúp bạn làm việc hiệu quả hơn với Tailwind CSS trong dự án Nuxt."
 date: 2025-10-22
