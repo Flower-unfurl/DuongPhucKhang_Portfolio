@@ -50,7 +50,8 @@
 		</section>
 
 		<section data-aos="fade-up" class="game" v-if="!isMobile">
-			<SnakeGame />
+			<!-- <SnakeGame /> -->
+			 <PingPong/>
 		</section>
 
 	</main>
