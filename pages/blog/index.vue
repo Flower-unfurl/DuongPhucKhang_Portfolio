@@ -43,13 +43,13 @@
 
         <!-- Tag filters -->
         <div class="flex flex-col">
-          <div class="flex items-center py-2 cursor-pointer" @click="filterByTag('all')">
-            <input type="checkbox" id="tag-all" :checked="selectedTag === 'all'">
+          <div class="flex items-center py-2 cursor-pointer">
+            <input type="checkbox" id="tag-all" :checked="selectedTag === 'all'" @change="onTagChange('all', $event)">
             <label for="tag-all" :class="selectedTag === 'all' ? 'text-white ml-4' : 'ml-4'">All</label>
           </div>
 
-          <div v-for="tag in availableTags" :key="tag" class="flex items-center py-2 cursor-pointer" @click="filterByTag(tag)">
-            <input type="checkbox" :id="'tag-' + tag" :checked="selectedTag === tag">
+          <div v-for="tag in availableTags" :key="tag" class="flex items-center py-2 cursor-pointer">
+            <input type="checkbox" :id="'tag-' + tag" :checked="selectedTag === tag" @change="onTagChange(tag, $event)">
             <label :for="'tag-' + tag" :class="selectedTag === tag ? 'text-white ml-4' : 'ml-4'">#{{ tag }}</label>
           </div>
         </div>
@@ -221,6 +221,19 @@ export default {
   },
   
   methods: {
+    // Handle checkbox change: if unchecked, fallback to 'all'
+    onTagChange(tag, event) {
+      const isChecked = !!(event && event.target && event.target.checked);
+      const nextTag = isChecked ? tag : 'all';
+      this.selectedTag = nextTag;
+      // Update URL query param
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.set('tag', nextTag);
+        window.history.replaceState({}, '', url.toString());
+      }
+    },
+
     // Load all blog posts from markdown files
     async loadBlogPosts() {
       this.loading = true;
@@ -385,6 +398,21 @@ export default {
 </script>
 
 <style scoped>
+#filter-menu {
+  /* Allow the filter menu to scroll when content exceeds the available space */
+  overflow-y: auto;
+  /* Sensible default on small screens to keep UI usable */
+  max-height: 70vh;
+}
+
+/* On larger screens, let the sidebar take most of the viewport height and scroll */
+@media (min-width: 1024px) {
+  #filter-menu {
+    /* Use viewport height so the sidebar can scroll independently */
+    max-height: calc(100vh - 20px);
+  }
+}
+
 #filters {
   padding: 10px 25px;
 }
